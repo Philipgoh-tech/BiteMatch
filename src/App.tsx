@@ -288,12 +288,18 @@ export default function App() {
         }
 
         // Dietary filter
-        if (
-          selectedDietary !== 'all' &&
-          !r.dietaryTags.some((tag) => tag.toLowerCase().includes(selectedDietary.toLowerCase()))
-        ) {
-          return false;
+        if (selectedDietary !== 'all') {
+          const req = selectedDietary.toLowerCase();
+          const hasMatch = r.dietaryTags.some((tag) => {
+            const t = tag.toLowerCase();
+            if (req === 'lactose') {
+              return t.includes('lactose') || t.includes('dairy-free') || t.includes('vegan');
+            }
+            return t.includes(req);
+          });
+          if (!hasMatch) return false;
         }
+
 
         // Promos only filter
         if (onlyPromos && r.activePromotions.length === 0) {
@@ -362,7 +368,7 @@ export default function App() {
                   <p className="text-stone-300 text-xs sm:text-sm mt-2 leading-relaxed">
                     Matched to your real-time mood, budget, dietary needs, and today's{' '}
                     <span className="font-semibold text-amber-300">
-                      {weather === 'rainy' ? 'rainy weather (warm soups & hearty pastas)' : `${weather} weather`}
+                      {weather === 'rainy' ? '11°C rainy weather (warm soups & hearty pastas)' : weather === 'chilly' ? '9°C chilly weather' : '22°C sunny weather'}
                     </span>
                     .
                   </p>
@@ -436,6 +442,7 @@ export default function App() {
                       <option value="Vegetarian">Vegetarian</option>
                       <option value="Vegan">Vegan</option>
                       <option value="Gluten-Free">Gluten-Free</option>
+                      <option value="Lactose">Lactose Intolerant</option>
                     </select>
 
                     <button
@@ -473,7 +480,7 @@ export default function App() {
                         </p>
                         <button
                           onClick={() => {
-                            setRadiusKm(5);
+                            setRadiusKm(3);
                             setSelectedCuisine('all');
                             setSelectedDietary('all');
                             setOnlyPromos(false);

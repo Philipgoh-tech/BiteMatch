@@ -106,7 +106,7 @@ export const LocationSelectorBar: React.FC<LocationSelectorBarProps> = ({
             <input
               type="range"
               min="0.5"
-              max="5"
+              max="3"
               step="0.5"
               value={radiusKm}
               onChange={(e) => onRadiusChange(parseFloat(e.target.value))}
@@ -171,17 +171,17 @@ export const LocationSelectorBar: React.FC<LocationSelectorBarProps> = ({
               {weather === 'rainy' ? (
                 <>
                   <CloudRain className="w-3.5 h-3.5 text-sky-600" />
-                  <span>Rainy 52°F</span>
+                  <span>Rainy 11°C</span>
                 </>
               ) : weather === 'chilly' ? (
                 <>
                   <Moon className="w-3.5 h-3.5 text-indigo-600" />
-                  <span>Chilly 48°F</span>
+                  <span>Chilly 9°C</span>
                 </>
               ) : (
                 <>
                   <Sun className="w-3.5 h-3.5 text-amber-500" />
-                  <span>Sunny 72°F</span>
+                  <span>Sunny 22°C</span>
                 </>
               )}
             </button>

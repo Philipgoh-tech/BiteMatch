@@ -50,7 +50,13 @@ export const DecisionSolverModal: React.FC<DecisionSolverModalProps> = ({
     { id: 'adventurous', label: 'Adventurous', desc: 'Bold spices, authentic street eats', icon: '🌶️' },
   ] as const;
 
-  const dietaryOptions = ['Vegetarian Friendly', 'Vegan Friendly', 'Gluten-Free Options', 'Halal Options'];
+  const dietaryOptions = [
+    'Vegetarian Friendly',
+    'Vegan Friendly',
+    'Gluten-Free Options',
+    'Halal Options',
+    'Lactose Intolerant',
+  ];
 
   const toggleDietary = (item: string) => {
     setDietary((prev) =>
@@ -70,6 +76,28 @@ export const DecisionSolverModal: React.FC<DecisionSolverModalProps> = ({
         let score = 70;
         const reasons: string[] = [];
 
+        // Dietary match (High Priority)
+        if (dietary.length > 0) {
+          const satisfiesAll = dietary.every((req) => {
+            if (req === 'Lactose Intolerant') {
+              return r.dietaryTags.some(
+                (t) =>
+                  t.toLowerCase().includes('lactose') ||
+                  t.toLowerCase().includes('dairy-free') ||
+                  t.toLowerCase().includes('vegan')
+              );
+            }
+            return r.dietaryTags.some((t) => t.toLowerCase().includes(req.toLowerCase().replace(' friendly', '').replace(' options', '')));
+          });
+
+          if (satisfiesAll) {
+            score += 15;
+            reasons.push(`Accommodates your dietary needs (${dietary.join(', ')}).`);
+          } else {
+            score -= 30; // penalize spots that cannot accommodate user's dietary restriction
+          }
+        }
+
         // Mood match
         if (r.moodTags.includes(selectedMood)) {
           score += 15;
@@ -80,9 +108,9 @@ export const DecisionSolverModal: React.FC<DecisionSolverModalProps> = ({
         if (r.weatherAffinity.includes(currentWeather) || r.weatherAffinity.includes('any')) {
           score += 8;
           if (currentWeather === 'rainy' || currentWeather === 'chilly') {
-            reasons.push(`Warm culinary shelter ideal for today's ${currentWeather} weather.`);
+            reasons.push(`Warm culinary shelter ideal for today's ${currentWeather === 'rainy' ? '11°C rainy' : '9°C chilly'} weather.`);
           } else {
-            reasons.push(`Great ambience matched to sunny outdoor & patio weather.`);
+            reasons.push(`Great ambience matched to 22°C sunny patio weather.`);
           }
         }
 
@@ -103,13 +131,14 @@ export const DecisionSolverModal: React.FC<DecisionSolverModalProps> = ({
           reasons.push(`Active seasonal promo: ${r.activePromotions[0].discountLabel}.`);
         }
 
-        return { restaurant: r, score: Math.min(score, 99), reasons };
+        return { restaurant: r, score: Math.max(20, Math.min(score, 99)), reasons };
       });
 
       scored.sort((a, b) => b.score - a.score);
       setWinner(scored[0] || { restaurant: restaurants[0], score: 96, reasons: ['Top neighborhood recommendation'] });
       setIsCalculating(false);
     }, 2000);
+
 
     return () => {
       clearTimeout(timer1);
@@ -140,7 +169,7 @@ export const DecisionSolverModal: React.FC<DecisionSolverModalProps> = ({
                 Get a Personalised Pick in Under 10 Seconds
               </h2>
               <p className="text-stone-600 text-sm mt-1">
-                Matched to your real-time mood, budget, weather ({currentWeather}), and mealtime ({currentMealtime}).
+                Matched to your real-time mood, budget, weather ({currentWeather === 'rainy' ? '11°C Rainy' : currentWeather === 'chilly' ? '9°C Chilly' : '22°C Sunny'}), and mealtime ({currentMealtime}).
               </p>
             </div>
 

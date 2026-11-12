@@ -585,6 +585,22 @@ export const MerchantPortalView: React.FC<MerchantPortalViewProps> = ({
                 />
               </div>
 
+              <div>
+                <label className="block font-semibold text-stone-700 mb-1">Dietary Tag</label>
+                <select
+                  value={dishDietary}
+                  onChange={(e) => setDishDietary(e.target.value)}
+                  className="w-full px-3 py-2 border border-stone-300 rounded-lg bg-white"
+                >
+                  <option value="Vegetarian Friendly">Vegetarian Friendly</option>
+                  <option value="Vegan Friendly">Vegan Friendly</option>
+                  <option value="Gluten-Free Options">Gluten-Free Options</option>
+                  <option value="Lactose-Free Options">Lactose-Free Options</option>
+                  <option value="Halal Options">Halal Options</option>
+                  <option value="Pescatarian Friendly">Pescatarian Friendly</option>
+                </select>
+              </div>
+
               <div className="flex items-center gap-4 py-1">
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input
@@ -596,6 +612,7 @@ export const MerchantPortalView: React.FC<MerchantPortalViewProps> = ({
                   <span className="font-medium text-stone-800">Mark as Seasonal Special</span>
                 </label>
               </div>
+
 
               <div className="flex items-center justify-end gap-3 pt-3 border-t border-stone-200">
                 <button
