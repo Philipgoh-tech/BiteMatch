@@ -1,0 +1,7 @@
+{
+  "name": "BiteMatch - Local Food Discovery & Restaurant Promotions",
+  "description": "Location-based restaurant recommendations, fast decision solver, seasonal promotions, loyalty rewards, and merchant portal.",
+  "requestFramePermissions": ["geolocation"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+
